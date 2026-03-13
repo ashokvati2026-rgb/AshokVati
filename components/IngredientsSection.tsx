@@ -4,6 +4,9 @@ import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+const FALLBACK_HERB_IMAGE =
+  'https://images.unsplash.com/photo-1457530378978-8bac673b8062?auto=format&fit=crop&w=900&q=80';
+
 const INGREDIENTS = [
   {
     id: 'gurkhalil',
@@ -44,7 +47,7 @@ const INGREDIENTS = [
     hindiName: 'रास्ना',
     latin: 'Pluchea lanceolata',
     desc: 'Ancient Vata-balancing herb traditionally used for arthritis and muscular disorders.',
-    imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Pluchea_indica_-_leaves.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=900&q=80',
     color1: '#0f0f0f',
     color2: '#181818',
     accentColor: '#c8c8c8',
@@ -89,14 +92,6 @@ export default function IngredientsSection() {
         },
       );
 
-      /* ── Continuous slow rotation on hover icon ── */
-      gsap.to('.ingredient-icon', {
-        rotation: 360,
-        duration: 18,
-        repeat: -1,
-        ease: 'none',
-        stagger: { each: 3, from: 'start' },
-      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -142,7 +137,10 @@ export default function IngredientsSection() {
                   className="w-full h-full object-cover ingredient-icon"
                   style={{ filter: 'brightness(0.98) saturate(1)' }}
                   onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
+                    const target = e.currentTarget;
+                    if (target.dataset.fallbackApplied === 'true') return;
+                    target.dataset.fallbackApplied = 'true';
+                    target.src = FALLBACK_HERB_IMAGE;
                   }}
                 />
 
